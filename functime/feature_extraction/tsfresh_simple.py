@@ -52,7 +52,7 @@ def percent_recoccuring_values(x: pl.Expr):
     X = x.value_counts().filter(
         pl.col("counts") > 1
     )
-    return X.shape[0] / x.unique().shape[0]
+    return X.shape[0] / x.n_unique()
 
 def sum_reocurring_points(x: pl.Expr):
     X = x.value_counts().filter(
