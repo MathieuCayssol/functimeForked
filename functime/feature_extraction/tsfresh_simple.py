@@ -31,37 +31,49 @@ def _get_length_sequences_where(x: pl.Series)-> pl.Series:
     return X
 
 def longest_strike_below_mean(x: pl.Expr)-> pl.Expr:
-    X = _get_length_sequences_where(x = (x < x.mean()))
+    X = _get_length_sequences_where(
+        (x < x.mean())
+    )
     return X.max() if X.len() > 0 else 0
 
 
 def longest_strike_above_mean(x: pl.Expr)-> pl.Expr:
-    X = _get_length_sequences_where(x = (x > x.mean()))
+    X = _get_length_sequences_where(
+        (x > x.mean())
+    )
     return X.max() if X.len() > 0 else 0
 
 def mean_n_absolute_max(x: pl.Expr, n_maxima: int)-> pl.Expr:
     return x.abs().sort(descending=True)[:n_maxima].mean() if x.len() > n_maxima else None
 
 def percent_reocurring_points(x: pl.Expr):
-    X = x.value_counts().filter(
-        pl.col("counts") > 1
-    ).sum()
+    X = (
+        x
+        .value_counts()
+        .filter(pl.col("counts") > 1).sum()
+    )
     return X[0, "counts"] / x.len()
 
 def percent_recoccuring_values(x: pl.Expr):
-    X = x.value_counts().filter(
-        pl.col("counts") > 1
+    X = (
+        x
+        .value_counts()
+        .filter(pl.col("counts") > 1)
     )
     return X.shape[0] / x.n_unique()
 
 def sum_reocurring_points(x: pl.Expr):
-    X = x.value_counts().filter(
-        pl.col("counts") > 1
+    X = (
+        x
+        .value_counts()
+        .filter(pl.col("counts") > 1)
     )
     return X[:,0].dot(X[:,1])
 
 def sum_reocurring_values(x: pl.Expr):
-    X = x.value_counts().filter(
-        pl.col("counts") > 1
-    ).sum()
+    X = (
+        x
+        .value_counts()
+        .filter(pl.col("counts") > 1).sum()
+    )
     return X[0,0]
